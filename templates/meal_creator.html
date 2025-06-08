@@ -1,18 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Meal Creator</h2>
 <form method="POST">
-  <label for="meal_name">Meal name:</label>
-  <input type="text" name="meal_name" required>
-  <br>
+  <h2>Meal Creator</h2>
+  <label for="meal_name">Meal Name:</label>
+  <input type="text" name="meal_name" placeholder="Ex: Chicken Stir Fry" required>
+  
   <label for="ingredients">Ingredients (JSON format):</label>
-  <!-- For simplicity the ingredients are entered as JSON text.
-       In a real app, use input fields for each ingredient with quantity, cost, nutrition stats etc. -->
-  <textarea name="ingredients" rows="5" cols="50" placeholder='[{"name": "Chicken", "qty": 200, "calories": 250}, ...]'></textarea>
-  <br>
-  <label for="servings">Number of servings:</label>
-  <input type="number" name="servings" value="1" required>
-  <br>
+  <textarea name="ingredients" rows="5" cols="50" placeholder='[{"name": "Chicken", "qty": 200, "calories": 250}, ...]' required></textarea>
+  
+  <label for="servings">Number of Servings:</label>
+  <input type="number" name="servings" value="1" min="1" required>
+  
   <button type="submit">Create Meal</button>
 </form>
 {% endblock %}
