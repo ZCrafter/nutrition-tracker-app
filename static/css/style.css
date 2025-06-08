@@ -13,7 +13,7 @@ body {
   min-height: 100vh;
 }
 
-/* Theme Modes */
+/* Theme Variables */
 .dark-mode {
   --bg-color: #1e1e1e;
   --text-color: #f0f0f0;
@@ -38,16 +38,16 @@ body.light-mode {
   color: var(--text-color);
 }
 
-/* Layout container */
+/* Layout */
 #container {
   display: flex;
   min-height: 100vh;
 }
 
-/* Side Navigation Styles */
+/* Side Navigation */
 #side-nav {
   background-color: var(--bg-color);
-  width: 60px;
+  width: 60px; /* Default collapsed width */
   transition: width 0.3s ease;
   overflow: hidden;
   border-right: 1px solid rgba(255,255,255,0.1);
@@ -62,20 +62,8 @@ body.light-mode {
 #nav-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 1em;
   background: rgba(0, 0, 0, 0.2);
-}
-
-#nav-header h2 {
-  font-size: 1.2em;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  white-space: nowrap;
-}
-
-#side-nav.expanded #nav-header h2 {
-  opacity: 1;
 }
 
 #nav-toggle {
@@ -84,6 +72,18 @@ body.light-mode {
   color: var(--text-color);
   font-size: 1.3em;
   cursor: pointer;
+}
+
+.app-name {
+  margin-left: 0.5em;
+  font-size: 1.1em;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#side-nav.expanded .app-name {
+  opacity: 1;
 }
 
 #side-nav ul {
@@ -99,16 +99,33 @@ body.light-mode {
 
 #side-nav ul li a {
   text-decoration: none;
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 0.8em 1em;
   color: var(--text-color);
   border-radius: 4px;
   transition: background 0.2s ease;
-  text-align: center;
 }
 
 #side-nav ul li a:hover {
   background: var(--accent-color);
+}
+
+#side-nav i {
+  width: 20px;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.link-text {
+  margin-left: 10px;
+  white-space: nowrap;
+  opacity: 0; /* Hidden in collapsed mode */
+  transition: opacity 0.3s ease;
+}
+
+#side-nav.expanded .link-text {
+  opacity: 1;
 }
 
 #theme-switch {
@@ -116,7 +133,7 @@ body.light-mode {
   text-align: center;
 }
 
-/* Main content area */
+/* Main Content */
 #main-content {
   flex: 1;
   padding: 2em;
