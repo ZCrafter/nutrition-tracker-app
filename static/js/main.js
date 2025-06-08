@@ -18,7 +18,9 @@ document.addEventListener("DOMContentLoaded", function() {
   navToggle.addEventListener("click", () => {
     if (sideNav.classList.contains("expanded")) {
       sideNav.classList.remove("expanded");
+      sideNav.classList.add("collapsed");
     } else {
+      sideNav.classList.remove("collapsed");
       sideNav.classList.add("expanded");
     }
   });
