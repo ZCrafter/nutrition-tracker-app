@@ -1,51 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 style="margin-bottom: 1em;">Dashboard</h2>
-<div class="dashboard">
-  <!-- Meal Schedule Section -->
-  <section class="meal-schedule" style="margin-bottom:2em;">
-    <h3>Meal Prep Schedule</h3>
-    <div class="weeks">
-      {% for week, days in week_dates.items() %}
-      <div class="week" style="margin-bottom: 1em;">
-        <h4>{{ week.replace('_',' ').title() }}</h4>
-        <ul>
-          {% for day in days %}
-          <li style="margin-bottom:0.5em;">
-            {{ day.strftime("%A %d %B %Y") }}
-            <br>
-            <input type="text" placeholder="Meal plan for the day" style="width: 100%;" />
-          </li>
-          {% endfor %}
-        </ul>
+<h2>Dashboard</h2>
+<div class="dashboard-wrapper" style="display: flex; max-width: 1100px; width:100%;">
+  <!-- Calendar Section -->
+  <div class="calendar-container">
+    {% set weekLabels = ['Last Week', 'Current Week', 'Next Week'] %}
+    {% for week_index in range(3) %}
+      {% for day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] %}
+      <div class="calendar-day">
+        <h4>{{ weekLabels[week_index] }} - {{ day }}</h4>
+        <div class="dropzone">
+          <!-- Meals dropped here appear -->
+          Drop meal here
+        </div>
       </div>
       {% endfor %}
-    </div>
-  </section>
-  <!-- Nutrition Statistics Section -->
-  <section class="statistics" style="margin-bottom:2em;">
-    <h3>Nutrition Statistics</h3>
+    {% endfor %}
+  </div>
+
+  <!-- Meal List Panel -->
+  <div class="meal-list-panel">
+    <h3>Meal List</h3>
+    <div class="meal-item" draggable="true">Chicken Salad</div>
+    <div class="meal-item" draggable="true">Beef Stir-fry</div>
+    <div class="meal-item" draggable="true">Veggie Pasta</div>
+    <div class="meal-item" draggable="true">Fruit Bowl</div>
+    <!-- Add more premade meals as needed -->
+  </div>
+</div>
+
+<!-- Nutrition Statistics -->
+<section class="statistics" style="margin-top:2em; width:100%; max-width:800px;">
+  <h3>Nutrition Statistics</h3>
+  {% if stats %}
     <ul style="list-style: none;">
       <li>Total Calories: {{ stats.calories_total }}</li>
       <li>Average Protein: {{ stats.protein_avg }} g</li>
       <li>Average Carbs: {{ stats.carbs_avg }} g</li>
       <li>Average Fat: {{ stats.fat_avg }} g</li>
     </ul>
-  </section>
-  <!-- Goals Section -->
-  <section class="goals">
-    <h3>Your Goals</h3>
-    <p>Set your daily targets and track your progress below.</p>
-    <form>
-      <label for="calories-goal">Calories:</label>
-      <input type="number" id="calories-goal" name="calories-goal" placeholder="2000">
-      
-      <label for="protein-goal">Protein (g):</label>
-      <input type="number" id="protein-goal" name="protein-goal" placeholder="100">
-      
-      <!-- More fields as necessary -->
-      <button type="button">Update Goals</button>
-    </form>
-  </section>
-</div>
+  {% else %}
+    <p>No nutrition data available yet.</p>
+  {% endif %}
+</section>
 {% endblock %}
