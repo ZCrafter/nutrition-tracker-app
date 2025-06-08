@@ -10,18 +10,28 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="dark-mode">
+  <!-- Global Top Header -->
+  <header id="top-header">
+    <h1>Nutrition Tracker</h1>
+  </header>
+
   <div id="container">
-    <!-- Collapsible Side Navigation -->
+    <!-- Fixed Side Navigation -->
     <nav id="side-nav" class="collapsed">
       <div id="nav-header">
-        <button id="nav-toggle"><i class="fas fa-bars"></i></button>
-        <!-- App name visible only when expanded -->
+        <button id="nav-toggle" class="icon-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <!-- App name inside sidebar appears when expanded -->
         <span class="app-name">Nutrition Tracker</span>
+        <button id="theme-toggle" class="icon-btn">
+          <i class="fas fa-moon"></i>
+        </button>
       </div>
       <ul>
         <li>
           <a href="{{ url_for('dashboard') }}">
-            <i class="fas fa-tachometer-alt"></i>
+            <i class="fas fa-calendar-alt"></i>
             <span class="link-text">Dashboard</span>
           </a>
         </li>
@@ -47,12 +57,9 @@
         </li>
         {% endif %}
       </ul>
-      <div id="theme-switch">
-        <button id="theme-toggle">Toggle Theme</button>
-      </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <div id="main-content">
       {% with messages = get_flashed_messages() %}
         {% if messages %}
