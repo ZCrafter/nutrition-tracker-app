@@ -7,10 +7,26 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
   background: linear-gradient(135deg, #1e1e1e, #2c3e50);
   color: #f0f0f0;
   min-height: 100vh;
+}
+
+/* Global Top Header */
+#top-header {
+  width: 100%;
+  background: var(--bg-color, #1e1e1e);
+  text-align: center;
+  padding: 1em 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#top-header h1 {
+  font-size: 1.8em;
 }
 
 /* Theme Variables */
@@ -21,6 +37,7 @@ body {
   --input-bg: #333;
   --button-bg: #27ae60;
   --button-text: #f0f0f0;
+  --icon-color: #f0f0f0;
 }
 
 .light-mode {
@@ -30,6 +47,7 @@ body {
   --input-bg: #fff;
   --button-bg: #2980b9;
   --button-text: #fff;
+  --icon-color: #333;
 }
 
 body.dark-mode,
@@ -38,19 +56,24 @@ body.light-mode {
   color: var(--text-color);
 }
 
-/* Layout */
+/* Layout Container */
 #container {
   display: flex;
-  min-height: 100vh;
+  padding-top: 60px; /* leave room for the fixed header */
 }
 
 /* Side Navigation */
 #side-nav {
+  position: fixed;
+  top: 60px; 
+  left: 0;
+  height: calc(100vh - 60px);
   background-color: var(--bg-color);
-  width: 60px; /* Default collapsed width */
+  width: 60px; /* collapsed width */
   transition: width 0.3s ease;
   overflow: hidden;
-  border-right: 1px solid rgba(255,255,255,0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 999;
   display: flex;
   flex-direction: column;
 }
@@ -62,20 +85,21 @@ body.light-mode {
 #nav-header {
   display: flex;
   align-items: center;
-  padding: 1em;
+  justify-content: space-between;
+  padding: 0.8em;
   background: rgba(0, 0, 0, 0.2);
 }
 
-#nav-toggle {
+#nav-toggle, #theme-toggle {
   background: none;
   border: none;
-  color: var(--text-color);
+  color: var(--icon-color);
   font-size: 1.3em;
   cursor: pointer;
 }
 
 .app-name {
-  margin-left: 0.5em;
+  margin-left: 0.2em;
   font-size: 1.1em;
   white-space: nowrap;
   opacity: 0;
@@ -90,7 +114,7 @@ body.light-mode {
   list-style: none;
   padding: 0;
   margin-top: 1em;
-  flex: 1;
+  flex-grow: 1;
 }
 
 #side-nav ul li {
@@ -115,12 +139,13 @@ body.light-mode {
   width: 20px;
   text-align: center;
   font-size: 1.2em;
+  color: var(--icon-color);
 }
 
 .link-text {
   margin-left: 10px;
   white-space: nowrap;
-  opacity: 0; /* Hidden in collapsed mode */
+  opacity: 0;
   transition: opacity 0.3s ease;
 }
 
@@ -128,22 +153,19 @@ body.light-mode {
   opacity: 1;
 }
 
-#theme-switch {
-  padding: 1em;
-  text-align: center;
-}
-
-/* Main Content */
+/* Main Content Area */
 #main-content {
-  flex: 1;
+  margin-left: 60px;  /* account for the collapsed sidebar */
   padding: 2em;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  transition: margin-left 0.3s ease;
 }
 
-/* Form Styles */
+#side-nav.expanded ~ #main-content {
+  margin-left: 200px;
+}
+
+/* Form Styles (for login/register/meal creator) */
 form {
   background: rgba(0, 0, 0, 0.3);
   padding: 2em;
@@ -190,7 +212,62 @@ form button:hover {
   opacity: 0.9;
 }
 
-/* Utility Classes */
+/* Calendar Styles for Dashboard */
+.calendar-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin-bottom: 2em;
+}
+
+.calendar-day {
+  width: calc(100% / 7);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 0.5em;
+  text-align: center;
+  min-height: 100px;
+  position: relative;
+}
+
+.calendar-day h4 {
+  margin-bottom: 0.5em;
+  font-size: 0.9em;
+}
+
+.calendar-day .dropzone {
+  height: 70%;
+  border: 1px dashed rgba(255,255,255,0.3);
+  padding: 0.2em;
+  overflow-y: auto;
+}
+
+/* Meal List Panel beside the Calendar */
+.meal-list-panel {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 1em;
+  margin-left: 1em;
+  max-width: 250px;
+  height: 400px;
+  overflow-y: auto;
+}
+
+.meal-list-panel h3 {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.meal-item {
+  background: var(--button-bg);
+  color: var(--button-text);
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  border-radius: 4px;
+  cursor: grab;
+}
+
+/* Flashes */
 .flashes {
   list-style: none;
   margin-bottom: 1em;
@@ -218,4 +295,12 @@ form button:hover {
 
 .button-link:hover {
   opacity: 0.9;
+}
+
+/* Utility Class for Icon Buttons */
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--icon-color);
 }
