@@ -1,46 +1,65 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Dashboard</h2>
-<div class="dashboard-wrapper" style="display: flex; max-width: 1100px; width:100%;">
-  <!-- Calendar Section -->
-  <div class="calendar-container">
-    {% set weekLabels = ['Last Week', 'Current Week', 'Next Week'] %}
-    {% for week_index in range(3) %}
-      {% for day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] %}
-      <div class="calendar-day">
-        <h4>{{ weekLabels[week_index] }} - {{ day }}</h4>
-        <div class="dropzone">
-          <!-- Meals dropped here appear -->
-          Drop meal here
-        </div>
-      </div>
-      {% endfor %}
-    {% endfor %}
-  </div>
+<h2 style="text-align:center; margin-bottom:1em;">Dashboard</h2>
 
-  <!-- Meal List Panel -->
-  <div class="meal-list-panel">
-    <h3>Meal List</h3>
-    <div class="meal-item" draggable="true">Chicken Salad</div>
-    <div class="meal-item" draggable="true">Beef Stir-fry</div>
-    <div class="meal-item" draggable="true">Veggie Pasta</div>
-    <div class="meal-item" draggable="true">Fruit Bowl</div>
-    <!-- Add more premade meals as needed -->
-  </div>
+<!-- Calendar Header: Sun through Sat with actual dates -->
+<div class="calendar-header">
+  {% for day in weekDates %}
+    <div>
+      <div>{{ day.weekday }}</div>
+      <div style="font-size:0.8em;">{{ day.date }}</div>
+    </div>
+  {% endfor %}
 </div>
 
-<!-- Nutrition Statistics -->
-<section class="statistics" style="margin-top:2em; width:100%; max-width:800px;">
+<!-- Calendar Grid -->
+<div class="calendar-container">
+  {% for day in weekDates %}
+  <div class="calendar-day {% if day.date == today %}today{% endif %}" data-date="{{ day.date }}">
+    <div class="day-label">{{ day.weekday }}<br>{{ day.date }}</div>
+    <!-- Meals here (each meal appears as its own box) -->
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Stats & Graphs Section -->
+<div class="stats-panel">
   <h3>Nutrition Statistics</h3>
   {% if stats %}
-    <ul style="list-style: none;">
+    <ul>
       <li>Total Calories: {{ stats.calories_total }}</li>
-      <li>Average Protein: {{ stats.protein_avg }} g</li>
-      <li>Average Carbs: {{ stats.carbs_avg }} g</li>
-      <li>Average Fat: {{ stats.fat_avg }} g</li>
+      <li>Protein: {{ stats.protein }} g</li>
+      <li>Carbs: {{ stats.carbs }} g</li>
+      <li>Fat: {{ stats.fat }} g</li>
     </ul>
+    <canvas id="nutritionChart" width="400" height="200"></canvas>
   {% else %}
     <p>No nutrition data available yet.</p>
   {% endif %}
-</section>
+</div>
+
+<script>
+  // Example Chart.js code; replace with actual nutrient vs. goal data if available.
+  const ctx = document.getElementById('nutritionChart').getContext('2d');
+  const nutritionChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Calories', 'Protein', 'Carbs', 'Fat'],
+      datasets: [{
+        label: 'Actual',
+        data: [0, 0, 0, 0],
+        backgroundColor: 'rgba(39,174,96,0.5)',
+      },{
+        label: 'Goal',
+        data: [2000, 100, 250, 70],
+        backgroundColor: 'rgba(231,76,60,0.5)',
+      }]
+    },
+    options: {
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
 {% endblock %}
