@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
         integrity="sha512-Fo3rlrZj/k7ujTnH/PRUUxcxD5cXhZn2MVpPFMi6z6qjPs0HAvLAV+FLm7dlB6QlY2vq73/hEUaTNuFyvY/tJg==" 
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Chart.js can be included if you want to display graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="dark-mode">
   <!-- Global Top Header -->
@@ -15,51 +17,50 @@
     <h1>Nutrition Tracker</h1>
   </header>
 
-  <div id="container">
-    <!-- Fixed Side Navigation -->
-    <nav id="side-nav" class="collapsed">
-      <div id="nav-header">
-        <button id="nav-toggle" class="icon-btn">
-          <i class="fas fa-bars"></i>
-        </button>
-        <!-- App name inside sidebar appears when expanded -->
-        <span class="app-name">Nutrition Tracker</span>
-        <button id="theme-toggle" class="icon-btn">
-          <i class="fas fa-moon"></i>
-        </button>
-      </div>
-      <ul>
-        <li>
-          <a href="{{ url_for('dashboard') }}">
-            <i class="fas fa-calendar-alt"></i>
-            <span class="link-text">Dashboard</span>
-          </a>
-        </li>
-        <li>
-          <a href="{{ url_for('meal_creator') }}">
-            <i class="fas fa-utensils"></i>
-            <span class="link-text">Meal Creator</span>
-          </a>
-        </li>
-        {% if current_user.is_authenticated %}
-        <li>
-          <a href="{{ url_for('logout') }}">
-            <i class="fas fa-sign-out-alt"></i>
-            <span class="link-text">Logout</span>
-          </a>
-        </li>
-        {% else %}
-        <li>
-          <a href="{{ url_for('login') }}">
-            <i class="fas fa-sign-in-alt"></i>
-            <span class="link-text">Login</span>
-          </a>
-        </li>
-        {% endif %}
-      </ul>
-    </nav>
+  <!-- Floating Sidebar -->
+  <nav id="side-nav" class="collapsed">
+    <div id="nav-header">
+      <button id="nav-toggle" class="icon-btn">
+        <i class="fas fa-bars"></i>
+      </button>
+      <span class="app-name">Nutrition Tracker</span>
+      <button id="theme-toggle" class="icon-btn">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+    <ul>
+      <li>
+        <a href="{{ url_for('dashboard') }}">
+          <i class="fas fa-calendar-alt"></i>
+          <span class="link-text">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('meal_creator') }}">
+          <i class="fas fa-utensils"></i>
+          <span class="link-text">Meal Creator</span>
+        </a>
+      </li>
+      {% if current_user.is_authenticated %}
+      <li>
+        <a href="{{ url_for('logout') }}">
+          <i class="fas fa-sign-out-alt"></i>
+          <span class="link-text">Logout</span>
+        </a>
+      </li>
+      {% else %}
+      <li>
+        <a href="{{ url_for('login') }}">
+          <i class="fas fa-sign-in-alt"></i>
+          <span class="link-text">Login</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
 
-    <!-- Main Content Area -->
+  <!-- Main Content (Centered) -->
+  <div id="main-container">
     <div id="main-content">
       {% with messages = get_flashed_messages() %}
         {% if messages %}
