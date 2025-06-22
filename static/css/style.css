@@ -27,6 +27,14 @@ body {
 
 #top-header h1 {
   font-size: 1.8em;
+  color: var(--text-color);
+}
+
+/* Center main container */
+#main-container {
+  max-width: 1200px;
+  margin: 80px auto 20px; /* Allow margin at top for header */
+  padding: 0 1em;
 }
 
 /* Theme Variables */
@@ -38,6 +46,7 @@ body {
   --button-bg: #27ae60;
   --button-text: #f0f0f0;
   --icon-color: #f0f0f0;
+  --meal-next-bg: #8e44ad; /* color for next week meals */
 }
 
 .light-mode {
@@ -48,6 +57,7 @@ body {
   --button-bg: #2980b9;
   --button-text: #fff;
   --icon-color: #333;
+  --meal-next-bg: #8e44ad;
 }
 
 body.dark-mode,
@@ -56,23 +66,17 @@ body.light-mode {
   color: var(--text-color);
 }
 
-/* Layout Container */
-#container {
-  display: flex;
-  padding-top: 60px; /* leave room for the fixed header */
-}
-
-/* Side Navigation */
+/* Floating Sidebar */
 #side-nav {
   position: fixed;
-  top: 60px; 
+  top: 60px;
   left: 0;
   height: calc(100vh - 60px);
   background-color: var(--bg-color);
-  width: 60px; /* collapsed width */
+  width: 60px;
   transition: width 0.3s ease;
   overflow: hidden;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255,255,255,0.1);
   z-index: 999;
   display: flex;
   flex-direction: column;
@@ -106,7 +110,8 @@ body.light-mode {
   transition: opacity 0.3s ease;
 }
 
-#side-nav.expanded .app-name {
+#side-nav.expanded .app-name,
+#side-nav.expanded .link-text {
   opacity: 1;
 }
 
@@ -149,119 +154,124 @@ body.light-mode {
   transition: opacity 0.3s ease;
 }
 
-#side-nav.expanded .link-text {
-  opacity: 1;
-}
-
-/* Main Content Area */
+/* Main Content */
 #main-content {
-  margin-left: 60px;  /* account for the collapsed sidebar */
+  margin-left: 60px;
   padding: 2em;
-  width: 100%;
   transition: margin-left 0.3s ease;
 }
 
-#side-nav.expanded ~ #main-content {
+#side-nav.expanded ~ #main-container #main-content {
   margin-left: 200px;
 }
 
-/* Form Styles (for login/register/meal creator) */
-form {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 2em;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 400px;
-}
-
-form h2 {
-  margin-bottom: 1em;
-  text-align: center;
-}
-
-form label {
-  display: block;
-  margin-bottom: 0.5em;
-}
-
-form input[type="text"],
-form input[type="password"],
-form input[type="number"],
-form textarea {
-  width: 100%;
-  padding: 0.7em;
-  margin-bottom: 1em;
-  border: 1px solid #555;
-  border-radius: 4px;
-  background: var(--input-bg);
-  color: var(--text-color);
-}
-
-form button {
-  background: var(--button-bg);
-  color: var(--button-text);
-  padding: 0.7em 2em;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  display: block;
-  width: 100%;
-}
-
-form button:hover {
-  opacity: 0.9;
-}
-
 /* Calendar Styles for Dashboard */
-.calendar-container {
+.calendar-header {
   display: flex;
-  flex-wrap: wrap;
-  max-width: 800px;
-  margin-bottom: 2em;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+}
+
+.calendar-header div {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+}
+
+.calendar-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 1em;
 }
 
 .calendar-day {
-  width: calc(100% / 7);
   border: 1px solid rgba(255,255,255,0.2);
-  padding: 0.5em;
-  text-align: center;
-  min-height: 100px;
+  border-radius: 4px;
+  min-height: 150px;
   position: relative;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
 }
 
-.calendar-day h4 {
-  margin-bottom: 0.5em;
+.calendar-day.today {
+  border: 2px solid var(--accent-color);
+  background: rgba(39, 174, 96, 0.15);
+}
+
+.calendar-day .day-label {
   font-size: 0.9em;
+  text-align: center;
+  margin-bottom: 0.3em;
 }
 
-.calendar-day .dropzone {
-  height: 70%;
-  border: 1px dashed rgba(255,255,255,0.3);
-  padding: 0.2em;
-  overflow-y: auto;
+.meal-box {
+  background: var(--button-bg);
+  color: var(--button-text);
+  margin: 2px 0;
+  padding: 0.3em;
+  border-radius: 4px;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
 }
 
-/* Meal List Panel beside the Calendar */
+.meal-box.next-week {
+  background: var(--meal-next-bg); /* next week’s meal color */
+}
+
+.meal-box .delete-meal {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+/* Meal List Panel for additional ingredients or meals (if needed) */
 .meal-list-panel {
   background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 8px;
   padding: 1em;
-  margin-left: 1em;
+  margin: 0.5em 0;
   max-width: 250px;
-  height: 400px;
   overflow-y: auto;
 }
 
-.meal-list-panel h3 {
-  text-align: center;
-  margin-bottom: 1em;
+/* Graphs/Stats Area */
+.stats-panel {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1em;
+  border-radius: 8px;
+  margin-top: 1em;
 }
 
-.meal-item {
+/* Form Styles for Meal Creator */
+.meal-builder {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1em;
+  border-radius: 8px;
+  margin-top: 1em;
+  display: flex;
+  gap: 1em;
+}
+
+.builder-panel, .ingredients-panel {
+  flex: 1;
+  background: rgba(0,0,0,0.2);
+  padding: 1em;
+  border-radius: 8px;
+  min-height: 300px;
+}
+
+.ingredient-item {
   background: var(--button-bg);
   color: var(--button-text);
-  padding: 0.5em;
+  padding: 0.4em;
   margin-bottom: 0.5em;
   border-radius: 4px;
   cursor: grab;
@@ -275,9 +285,6 @@ form button:hover {
   background: rgba(255, 0, 0, 0.2);
   border: 1px solid red;
   border-radius: 4px;
-}
-
-.flashes li {
   text-align: center;
 }
 
@@ -297,7 +304,7 @@ form button:hover {
   opacity: 0.9;
 }
 
-/* Utility Class for Icon Buttons */
+/* Utility for Icon Buttons */
 .icon-btn {
   background: none;
   border: none;
