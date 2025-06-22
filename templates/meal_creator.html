@@ -1,16 +1,71 @@
 {% extends "base.html" %}
 {% block content %}
-<form method="POST">
-  <h2>Meal Creator</h2>
-  <label for="meal_name">Meal Name:</label>
-  <input type="text" name="meal_name" placeholder="Ex: Chicken Stir Fry" required>
+<h2 style="text-align:center; margin-bottom:1em;">Meal Creator</h2>
+<div class="meal-builder">
+  <!-- Ingredients Panel -->
+  <div class="ingredients-panel">
+    <h3>Ingredients</h3>
+    {% for ing in ingredients %}
+      <div class="ingredient-item" data-calories="{{ ing.calories }}" data-cost="{{ ing.cost }}">
+        {{ ing.name }} - {{ ing.calories }} cal, ${{ ing.cost }}
+      </div>
+    {% else %}
+      <p>No ingredients available.</p>
+    {% endfor %}
+  </div>
   
-  <label for="ingredients">Ingredients (JSON format):</label>
-  <textarea name="ingredients" rows="5" cols="50" placeholder='[{"name": "Chicken", "qty": 200, "calories": 250}, ...]' required></textarea>
+  <!-- Builder Panel -->
+  <div class="builder-panel">
+    <h3>Build Your Meal</h3>
+    <!-- Droppable area where ingredients are added -->
+    <div id="meal-dropzone" style="min-height:200px; border:2px dashed rgba(255,255,255,0.3); padding:1em; border-radius:4px;">
+      Drag ingredients here
+    </div>
+    <br>
+    <label for="servings">Number of Servings:</label>
+    <input type="number" id="servings" name="servings" min="1" value="1" required>
+    <br>
+    <button type="button" id="save-meal">Save Meal</button>
+  </div>
+</div>
+
+<script>
+  // Allow drag and drop in the meal creator drop zone
+  const mealDropzone = document.getElementById('meal-dropzone');
+  const ingredientItems = document.querySelectorAll('.ingredient-item');
+
+  ingredientItems.forEach(item => {
+    item.setAttribute('draggable', true);
+    item.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', item.innerText);
+      // You may also pass JSON data with nutrient/cost values if needed
+    });
+  });
+
+  mealDropzone.addEventListener('dragover', e => {
+    e.preventDefault();
+  });
   
-  <label for="servings">Number of Servings:</label>
-  <input type="number" name="servings" value="1" min="1" required>
-  
-  <button type="submit">Create Meal</button>
-</form>
+  mealDropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    const data = e.dataTransfer.getData('text/plain');
+    // Remove placeholder text if necessary
+    if (mealDropzone.innerText.includes('Drag ingredients here')) {
+      mealDropzone.innerText = '';
+    }
+    // Create a new ingredient box in the meal drop zone
+    const newBox = document.createElement('div');
+    newBox.className = 'ingredient-item';
+    newBox.innerText = data;
+    mealDropzone.appendChild(newBox);
+  });
+
+  // Optionally, hook the "Save Meal" button to send data to your backend
+  document.getElementById('save-meal').addEventListener('click', () => {
+    // Gather meal ingredients from mealDropzone.innerText or child nodes
+    // Gather the number of servings from the input field
+    // Send via AJAX or form submission
+    alert('Meal saved (functionality to be implemented in backend).');
+  });
+</script>
 {% endblock %}
